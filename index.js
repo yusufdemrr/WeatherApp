@@ -4,6 +4,9 @@ const weatherBox = document.querySelector('.weather-box');
 const weatherDetails = document.querySelector('.weather-details');
 const cityCountryElement = document.querySelector('.container .city-country');
 const error404 = document.querySelector('.not-found');
+const temperature = document.querySelector('.weather-box .temperature');
+
+let isFahrenheit = false;
 
 async function getCityCountryInfo(city) {
     const APIKey = '2437a4c75fbf487f697570c80773f8c5';
@@ -52,7 +55,6 @@ async function getCityCountryInfo(city) {
         error404.classList.remove('fadeIn');
 
         const image = document.querySelector('.weather-box img');
-        const temperature = document.querySelector('.weather-box .temperature');
         const description = document.querySelector('.weather-box .description');
         const humidity = document.querySelector('.weather-details .humidity span');
         const wind = document.querySelector('.weather-details .wind span');
@@ -127,10 +129,36 @@ async function getCityCountryInfo(city) {
         cityCountryElement.classList.add('fadeIn');
         container.style.height = '590px';
 
+        // Her arama sonrasında sıcaklık birimini Celsius'a çevir
+        isFahrenheit = false;
+        toggleTemperature();
+
     } catch (error) {
         console.error('An error occurred:', error);
     }
 }
+
+const toggleButton = document.getElementById('toggleButton');
+
+function toggleTemperature() {
+    const temperatureValue = parseInt(temperature.innerText);
+
+    if (isFahrenheit) {
+        // Convert Fahrenheit to Celsius
+        const celsiusValue = ((temperatureValue - 32) * 5) / 9;
+        temperature.innerHTML = `${Math.round(celsiusValue)}<span>°C</span>`;
+        toggleButton.innerHTML = '°F';
+    } else {
+        // Convert Celsius to Fahrenheit
+        const fahrenheitValue = (temperatureValue * 9) / 5 + 32;
+        temperature.innerHTML = `${Math.round(fahrenheitValue)}<span>°F</span>`;
+        toggleButton.innerHTML = '°C';
+    }
+
+    isFahrenheit = !isFahrenheit;
+}
+
+toggleButton.addEventListener('click', toggleTemperature);
 
 search.addEventListener('click' , searchWeather);
 
